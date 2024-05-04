@@ -6,6 +6,7 @@ import (
 
 	core "achapromo.com/gtinscout"
 	barcodemonster "achapromo.com/gtinscout/websites/barcode.monster"
+	openfoodfactsorg "achapromo.com/gtinscout/websites/openfoodfacts.org"
 )
 
 func main() {
@@ -20,11 +21,12 @@ func main() {
 			Debug: true,
 		},
 		Scrapers: []core.Scraper{
-			&barcodemonster.Scraper{HttpClient: httpClient},
+			&barcodemonster.Scraper{HttpClient: httpClient},   // GTIN: 7898422745523
+			&openfoodfactsorg.Scraper{HttpClient: httpClient}, // GTIN: 7898215151784
 		},
 	}
 
-	products, err := engine.Search("7898422745523")
+	products, err := engine.Search("7898215151784")
 	if err != nil {
 		panic(err)
 	}
