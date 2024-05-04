@@ -34,7 +34,8 @@ type (
 )
 
 var (
-	ErrMissingScraper = errors.New("missing scraper")
+	ErrMissingScraper  = errors.New("missing scraper")
+	ErrProductNotFound = errors.New("product not found")
 )
 
 func (e *Engine) Search(gtin string) ([]Product, error) {
