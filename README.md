@@ -1,2 +1,1 @@
-# GTIN Scout
-
+# GTINscout
