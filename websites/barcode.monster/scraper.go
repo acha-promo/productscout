@@ -32,10 +32,14 @@ func (s *Scraper) Scrape(gtin string) ([]core.Product, error) {
 		return nil, err
 	}
 
+	if productData.Status == "not found" {
+		return nil, core.ErrProductNotFound
+	}
+
 	product := core.Product{
 		Name: sanitize(productData.Description),
 		GTIN: productData.Code,
-		URL:  fmt.Sprintf("%s/%s", URL, gtin),
+		URL:  url(gtin),
 	}
 
 	return []core.Product{product}, nil
@@ -52,12 +56,15 @@ func sanitize(name string) string {
 	return name
 }
 
-func (s *Scraper) fetchProductData(barcode string) (*ProductData, error) {
-	url := fmt.Sprintf("%s/api/%s", URL, barcode)
+func (s *Scraper) fetchProductData(gtin string) (*ProductData, error) {
 	var productData ProductData
-	err := s.HttpClient.GetJSON(url, &productData)
+	err := s.HttpClient.GetJSON(url(gtin), &productData)
 	if err != nil {
 		return nil, err
 	}
 	return &productData, nil
+}
+
+func url(gtin string) string {
+	return fmt.Sprintf("%s/api/%s", URL, gtin)
 }
