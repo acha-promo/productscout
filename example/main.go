@@ -7,6 +7,7 @@ import (
 	core "achapromo.com/productscout"
 	"achapromo.com/productscout/httpclient"
 	barcodemonster "achapromo.com/productscout/websites/barcode.monster"
+	comprafoodservicecombr "achapromo.com/productscout/websites/comprafoodservice.com.br"
 	openfoodfactsorg "achapromo.com/productscout/websites/openfoodfacts.org"
 )
 
@@ -21,8 +22,9 @@ func main() {
 		core.WithDebug(),
 		core.WithMaxConcurrency(20),
 		core.WithScrapers(
-			&barcodemonster.Scraper{HttpClient: httpClient},   // GTIN: 7898422745523
-			&openfoodfactsorg.Scraper{HttpClient: httpClient}, // GTIN: 7898215151784
+			&comprafoodservicecombr.Scraper{HttpClient: httpClient},
+			&barcodemonster.Scraper{HttpClient: httpClient},
+			&openfoodfactsorg.Scraper{HttpClient: httpClient},
 		),
 	)
 

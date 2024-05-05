@@ -12,6 +12,7 @@ import (
 type HttpClient struct {
 	client    *http.Client
 	userAgent string
+	headers   map[string]string
 }
 
 // Option configures the HttpClient
@@ -43,11 +44,19 @@ func NewHttpClient(opts ...Option) *HttpClient {
 	return hc
 }
 
+func (hc *HttpClient) SetHeaders(headers map[string]string) {
+	hc.headers = headers
+}
+
 // GetJSON performs a GET request and decodes the JSON response into the target interface{}
 func (hc *HttpClient) GetJSON(url string, target interface{}) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
+	}
+
+	for key, value := range hc.headers {
+		req.Header.Set(key, value)
 	}
 
 	req.Header.Set("User-Agent", hc.userAgent)
