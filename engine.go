@@ -18,7 +18,7 @@ type (
 	}
 
 	Scraper interface {
-		Scrape(gtin string) ([]Product, error)
+		Scrape(product string) ([]Product, error)
 		Info() Website
 	}
 
@@ -38,7 +38,7 @@ var (
 	ErrProductNotFound = errors.New("product not found")
 )
 
-func (e *Engine) Search(gtin string) ([]Product, error) {
+func (e *Engine) Search(product string) ([]Product, error) {
 
 	if e.Config.Logger == nil {
 		e.Config.Logger = &DefaultLogger{}
@@ -57,7 +57,7 @@ func (e *Engine) Search(gtin string) ([]Product, error) {
 		wg.Add(1)
 		go func(s Scraper) {
 			defer wg.Done()
-			products, err := s.Scrape(gtin)
+			products, err := s.Scrape(product)
 			if err == nil {
 				resultsMutex.Lock()
 				results = append(results, products...)

@@ -1,1 +1,1 @@
-# GTINscout
+# productscout
