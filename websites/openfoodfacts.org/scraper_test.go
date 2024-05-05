@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core "achapromo.com/gtinscout"
+	"achapromo.com/gtinscout/httpclient"
 	openfoodfactsorg "achapromo.com/gtinscout/websites/openfoodfacts.org"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ func TestScraper_ScrapeProductData_Valid(t *testing.T) {
 
 	server := createServer(t, expectedURL, expectedResponse)
 	defer server.Close()
-	scraper := openfoodfactsorg.Scraper{HttpClient: core.NewHttpClient()}
+	scraper := openfoodfactsorg.Scraper{HttpClient: httpclient.NewHttpClient()}
 
 	// Call
 	productData, err := scraper.Scrape("7898215151784")

@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	core "achapromo.com/gtinscout"
+	"achapromo.com/gtinscout/httpclient"
 	barcodemonster "achapromo.com/gtinscout/websites/barcode.monster"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,7 +23,7 @@ func TestScraper_ScrapeProductData_Valid(t *testing.T) {
 
 	server := createServer(t, expectedURL, expectedResponse)
 	defer server.Close()
-	scraper := barcodemonster.Scraper{HttpClient: core.NewHttpClient()}
+	scraper := barcodemonster.Scraper{HttpClient: httpclient.NewHttpClient()}
 
 	// Call
 	productData, err := scraper.Scrape("7898422745523")

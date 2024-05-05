@@ -1,4 +1,4 @@
-package core
+package httpclient
 
 import (
 	"encoding/json"

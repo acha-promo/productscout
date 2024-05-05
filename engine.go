@@ -33,9 +33,12 @@ type (
 	}
 
 	Engine struct {
-		Config   Config
-		Scrapers []Scraper
+		config   Config
+		scrapers []Scraper
 	}
+
+	// Option configures the Engine
+	Option func(*Engine)
 )
 
 var (
@@ -45,27 +48,68 @@ var (
 	gtinRegex = regexp.MustCompile(`^\d{13}$`)
 )
 
+func NewEngine(opts ...Option) *Engine {
+	e := &Engine{}
+	for _, opt := range opts {
+		opt(e)
+	}
+	return e
+}
+
+// WithTimeout sets the timeout for the Engine as a whole operation
+func WithTimeout(d time.Duration) Option {
+	return func(e *Engine) {
+		e.config.Timeout = d
+	}
+}
+
+// WithLogger sets the logger for the Engine
+func WithLogger(l Logger) Option {
+	return func(e *Engine) {
+		e.config.Logger = l
+	}
+}
+
+// WithDebug sets the debug mode for the Engine
+func WithDebug() Option {
+	return func(e *Engine) {
+		e.config.Debug = true
+	}
+}
+
+func WithMaxConcurrency(n int) Option {
+	return func(e *Engine) {
+		e.config.MaxConcurrency = n
+	}
+}
+
+func WithScrapers(s ...Scraper) Option {
+	return func(e *Engine) {
+		e.scrapers = append(e.scrapers, s...)
+	}
+}
+
 func (e *Engine) setup() {
-	if e.Config.Logger == nil {
-		e.Config.Logger = &DefaultLogger{}
+	if e.config.Logger == nil {
+		e.config.Logger = &DefaultLogger{}
 	}
 
-	if e.Config.MaxConcurrency == 0 {
-		e.Config.MaxConcurrency = 10
+	if e.config.MaxConcurrency == 0 {
+		e.config.MaxConcurrency = 10
 	}
 }
 
 func (e *Engine) Search(product string) ([]Product, error) {
 	e.setup()
 
-	if len(e.Scrapers) == 0 {
+	if len(e.scrapers) == 0 {
 		return nil, ErrMissingScraper
 	}
 
 	var ctx context.Context
 	var cancel context.CancelFunc
-	if e.Config.Timeout > 0 {
-		ctx, cancel = context.WithTimeout(context.Background(), e.Config.Timeout)
+	if e.config.Timeout > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), e.config.Timeout)
 	} else {
 		ctx, cancel = context.WithCancel(context.Background())
 	}
@@ -76,15 +120,15 @@ func (e *Engine) Search(product string) ([]Product, error) {
 	resultsMutex := &sync.Mutex{}
 
 	// Create a buffered channel to limit the number of goroutines
-	semaphore := make(chan struct{}, e.Config.MaxConcurrency)
+	semaphore := make(chan struct{}, e.config.MaxConcurrency)
 
-	for idx, scraper := range e.Scrapers {
+	for idx, scraper := range e.scrapers {
 		e.debug("Scraping", scraper.Info().URL)
 
 		select {
 		case semaphore <- struct{}{}: // Block if there are already MaxConcurrency goroutines running
 		case <-ctx.Done(): // Check if the context deadline has been reached
-			e.Config.Logger.Error(fmt.Sprintf("timeout reached before starting all scrapers (exec: %d | non-exec: %d)", idx+1, len(e.Scrapers[idx:])))
+			e.config.Logger.Error(fmt.Sprintf("timeout reached before starting all scrapers (exec: %d | non-exec: %d)", idx+1, len(e.scrapers[idx:])))
 			return results, ctx.Err()
 		}
 
@@ -100,7 +144,7 @@ func (e *Engine) Search(product string) ([]Product, error) {
 					results = append(results, products...)
 					resultsMutex.Unlock()
 				} else {
-					e.Config.Logger.Error(fmt.Errorf("scraper %T failed: %w", s, err))
+					e.config.Logger.Error(fmt.Errorf("scraper %T failed: %w", s, err))
 				}
 			}
 		}(scraper)
@@ -121,9 +165,13 @@ func (e *Engine) Search(product string) ([]Product, error) {
 	return results, nil
 }
 
+func (e *Engine) AddScraper(s Scraper) {
+	e.scrapers = append(e.scrapers, s)
+}
+
 func (e *Engine) debug(args ...any) {
-	if e.Config.Debug {
-		e.Config.Logger.Debug(args...)
+	if e.config.Debug {
+		e.config.Logger.Debug(args...)
 	}
 }
 

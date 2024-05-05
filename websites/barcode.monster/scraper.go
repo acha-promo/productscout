@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	core "achapromo.com/gtinscout"
+	"achapromo.com/gtinscout/httpclient"
 )
 
 const (
@@ -13,7 +14,7 @@ const (
 
 type (
 	Scraper struct {
-		HttpClient *core.HttpClient
+		HttpClient *httpclient.HttpClient
 	}
 
 	ProductData struct {
