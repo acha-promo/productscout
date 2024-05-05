@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"achapromo.com/gtinscout/httpclient"
-	openfoodfactsorg "achapromo.com/gtinscout/websites/openfoodfacts.org"
+	"achapromo.com/productscout/httpclient"
+	openfoodfactsorg "achapromo.com/productscout/websites/openfoodfacts.org"
 
 	"github.com/stretchr/testify/assert"
 )

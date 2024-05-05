@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"achapromo.com/gtinscout/httpclient"
-	barcodemonster "achapromo.com/gtinscout/websites/barcode.monster"
+	"achapromo.com/productscout/httpclient"
+	barcodemonster "achapromo.com/productscout/websites/barcode.monster"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	core "achapromo.com/gtinscout"
-	"achapromo.com/gtinscout/httpclient"
-	barcodemonster "achapromo.com/gtinscout/websites/barcode.monster"
-	openfoodfactsorg "achapromo.com/gtinscout/websites/openfoodfacts.org"
+	core "achapromo.com/productscout"
+	"achapromo.com/productscout/httpclient"
+	barcodemonster "achapromo.com/productscout/websites/barcode.monster"
+	openfoodfactsorg "achapromo.com/productscout/websites/openfoodfacts.org"
 )
 
 func main() {

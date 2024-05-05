@@ -3,8 +3,8 @@ package openfoodfactsorg
 import (
 	"fmt"
 
-	core "achapromo.com/gtinscout"
-	"achapromo.com/gtinscout/httpclient"
+	core "achapromo.com/productscout"
+	"achapromo.com/productscout/httpclient"
 )
 
 const (

@@ -1,4 +1,4 @@
-module achapromo.com/gtinscout
+module achapromo.com/productscout
 
 go 1.22.0
 
