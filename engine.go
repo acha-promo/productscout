@@ -41,9 +41,11 @@ type (
 var (
 	ErrMissingScraper  = errors.New("missing scraper")
 	ErrProductNotFound = errors.New("product not found")
+
+	gtinRegex = regexp.MustCompile(`^\d{13}$`)
 )
 
-func (e *Engine) init() {
+func (e *Engine) setup() {
 	if e.Config.Logger == nil {
 		e.Config.Logger = &DefaultLogger{}
 	}
@@ -54,7 +56,7 @@ func (e *Engine) init() {
 }
 
 func (e *Engine) Search(product string) ([]Product, error) {
-	e.init()
+	e.setup()
 
 	if len(e.Scrapers) == 0 {
 		return nil, ErrMissingScraper
@@ -126,5 +128,5 @@ func (e *Engine) debug(args ...any) {
 }
 
 func isGTIN(s string) bool {
-	return regexp.MustCompile(`^\d{13}$`).MatchString(s)
+	return gtinRegex.MatchString(s)
 }
