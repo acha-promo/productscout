@@ -9,6 +9,7 @@ import (
 	barcodemonster "achapromo.com/productscout/websites/barcode.monster"
 	comprafoodservicecombr "achapromo.com/productscout/websites/comprafoodservice.com.br"
 	openfoodfactsorg "achapromo.com/productscout/websites/openfoodfacts.org"
+	paguemenoscombr "achapromo.com/productscout/websites/paguemenos.com.br"
 )
 
 func main() {
@@ -25,10 +26,11 @@ func main() {
 			&comprafoodservicecombr.Scraper{HttpClient: httpClient},
 			&barcodemonster.Scraper{HttpClient: httpClient},
 			&openfoodfactsorg.Scraper{HttpClient: httpClient},
+			&paguemenoscombr.Scraper{HttpClient: httpClient},
 		),
 	)
 
-	products, err := engine.Search("7898215151784")
+	products, err := engine.Search("7895800430002")
 	if err != nil {
 		panic(err)
 	}
